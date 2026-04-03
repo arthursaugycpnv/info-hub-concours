@@ -114,7 +114,6 @@ require_once __DIR__ . '/includes/header.php';
                 </div>
             <?php endforeach; ?>
         </div>
-    <?php else: ?>
         <div class="text-end mt-3">
             <a href="/annonces.php" class="btn btn-outline-secondary btn-sm">Toutes les annonces <i class="bi bi-arrow-right ms-1"></i></a>
         </div>

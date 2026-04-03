@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS concours (
     prix        DECIMAL(10,2) DEFAULT NULL,
     deadline    DATE          DEFAULT NULL,
     pdf_url     VARCHAR(500)  DEFAULT NULL,
-    actif       TINYINT(1)   NOT NULL DEFAULT 1,
+    actif       BOOLEAN   NOT NULL DEFAULT 1,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -58,6 +58,6 @@ CREATE TABLE IF NOT EXISTS annonces (
     prix          DECIMAL(10,2) DEFAULT NULL,
     image         VARCHAR(500)  DEFAULT NULL,
     contact_email VARCHAR(150)  NOT NULL,
-    actif         TINYINT(1)   NOT NULL DEFAULT 1,
+    actif         BOOLEAN   NOT NULL DEFAULT 1,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
