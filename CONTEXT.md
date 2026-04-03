@@ -32,48 +32,89 @@
 
 ---
 
-## Structure des contenus
+## Stack technique
 
-### 1. Concours du mois
-- Un concours actif à la fois (ou plusieurs ?)
-- Exemple actuel : Hackathon "Site pour l'association" — CHF 250.-, deadline 20 avril
-- Doit inclure : description, prix, deadline, lien vers PDF descriptif, formulaire d'inscription
-
-### 2. News
-- Articles rédigés par étudiants/enseignants
-- Exemples :
-  - "MA-Métiers : des pitchs et des prix" (JP Chavey, fév 2026) — récit d'un événement scolaire
-  - "Expo sur le racisme" (JP Chavey, fév 2026) — compte-rendu d'exposition dans les couloirs
-
-### 3. Annonces
-- Réservées en priorité aux étudiants, ensuite aux enseignants
-- Format : photo + titre + description + prix + contact mail + mode de paiement (Twint)
-- Paiement à l'association si affaire conclue
-- Réponse le vendredi suivant l'annonce
-
-### 4. Pubs (publicités gratuites)
-- Gratuites pour étudiants et enseignants, payantes pour externes
+- **PHP** natif (sans framework)
+- **MySQL** via PDO
+- **Bootstrap 5** + Bootstrap Icons (CDN)
+- Environnement local : **Laragon** (Apache + MySQL + phpMyAdmin)
 
 ---
 
-## Décisions d'architecture (à définir)
+## Structure des fichiers
 
-### Stack technique envisagée
-- À définir selon les compétences (PHP/MySQL classique ? Laravel ? Node.js ? Python/Django ?)
-- Base de données : MySQL ou PostgreSQL
-- Front-end : HTML/CSS/JS vanilla ou framework léger (Bootstrap pour le responsive)
+```
+/
+├── config.php              # Connexion PDO + BASE_URL auto-détecté + session_start() + isAdmin()
+├── index.php               # Accueil : concours actif + 3 news + 6 annonces
+├── concours.php            # Concours du mois (détail + formulaire d'inscription)
+├── inscription.php         # Traitement POST inscription concours
+├── news.php                # Liste des news + détail article (?id=X)
+├── annonces.php            # Liste de toutes les annonces
+├── annonce.php             # Détail annonce : image, description, commentaires
+├── includes/
+│   ├── header.php          # <head> + navbar + barre admin (si connecté)
+│   └── footer.php          # Footer + lien admin + scripts Bootstrap
+├── admin/
+│   ├── login.php           # Connexion admin (bcrypt)
+│   ├── logout.php          # Déconnexion
+│   └── index.php           # Dashboard : onglets Concours / News / Annonces
+└── sql/
+    ├── infohub-structure.sql   # DROP + CREATE DB + tables (importer en 1er)
+    └── infohub-data.sql        # Données de test (importer en 2e)
+```
 
-### Pages front-end minimales
-- `/` — Accueil
-- `/concours` — Concours du mois
-- `/news` — Liste des news
-- `/news/:id` — Article complet
-- `/annonces` — Liste des annonces
-- `/pubs` — Publicités
+---
 
-### Back-office (admin)
-- Connexion sécurisée
-- CRUD pour chaque type de contenu
+## Base de données
+
+| Table | Colonnes principales |
+|-------|---------------------|
+| `utilisateurs` | id, nom, email, mot_de_passe (bcrypt), role (admin/etudiant/enseignant) |
+| `concours` | id, titre, description, prix, deadline, pdf_url, actif |
+| `inscriptions` | id, concours_id, nom, email, type (individuel/groupe), membres |
+| `news` | id, titre, contenu, auteur, image |
+| `annonces` | id, titre, description, prix, image, contact_email, actif |
+| `commentaires` | id, annonce_id, auteur, contenu |
+
+**BASE_URL** est calculé automatiquement depuis `DOCUMENT_ROOT` — fonctionne avec `.test` et `localhost/sous-dossier/`.
+
+---
+
+## Identifiants de test
+
+| Rôle | Email | Mot de passe |
+|------|-------|--------------|
+| Admin | admin@cpnv.ch | admin123 |
+| Étudiant | etudiant@cpnv.ch | etudiant123 |
+
+---
+
+## Fonctionnalités implémentées
+
+### Front-end public
+- [x] Accueil avec concours actif, dernières news, dernières annonces
+- [x] Page concours du mois (description, countdown deadline, formulaire d'inscription)
+- [x] Liste des news + article complet
+- [x] Liste des annonces + page détail par annonce
+- [x] Page annonce : image, description, contact vendeur, section commentaires
+- [x] Barre admin jaune en haut de page si connecté (lien dashboard + déconnexion)
+- [x] Bouton "Gérer dans l'admin" + suppression de commentaire si admin
+
+### Back-office admin
+- [x] Login sécurisé (bcrypt + session)
+- [x] Onglet Concours : ajouter un concours, historique (actif/archivé)
+- [x] Onglet News : ajouter / supprimer une news
+- [x] Onglet Annonces : ajouter / supprimer, avec date, nb commentaires, statut, lien public
+
+---
+
+## À faire (prochaines étapes)
+
+- [ ] Design poussé (couleurs, typographie, mise en page)
+- [ ] Page Pubs (publicités gratuites étudiants/enseignants)
+- [ ] Upload d'images pour annonces et news
+- [ ] Gestion des inscriptions dans l'admin (voir qui s'est inscrit au concours)
 
 ---
 
@@ -83,13 +124,21 @@
 - Prise de connaissance du projet (lecture des 4 PDFs)
 - Compréhension du cahier des charges
 - Création de ce fichier CONTEXT.md
-- Prochaine étape : définir le stack technique et initier la structure du projet
+
+### Session 2 — 2026-04-03
+- Choix du stack : PHP + MySQL + Bootstrap
+- Création de la base minimale (config, index, admin login/dashboard, SQL)
+- Pages détail : concours, news, annonces, annonce individuelle
+- Ajout commentaires sur les annonces
+- Barre admin sur les pages publiques
+- BASE_URL auto-détecté pour compatibilité vhost/.test/localhost
+- README.md réécrit en UTF-8
 
 ---
 
-## Notes personnelles
+## Notes personnelles (touches à apporter)
 
 - Design soigné, moderne, adapté à une communauté d'étudiants en informatique
 - Dark mode possible
 - Système de like/réaction sur les news
-- Formulaire d'inscription au concours directement sur le site
+- Formulaire d'inscription au concours directement sur le site (déjà fait)
