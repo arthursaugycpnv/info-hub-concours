@@ -41,6 +41,17 @@ CREATE TABLE IF NOT EXISTS annonces (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS inscriptions (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    concours_id INT NOT NULL,
+    nom VARCHAR(150) NOT NULL,
+    email VARCHAR(150) NOT NULL,
+    type ENUM('individuel', 'groupe') NOT NULL DEFAULT 'individuel',
+    membres TEXT DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (concours_id) REFERENCES concours(id) ON DELETE CASCADE
+);
+
 -- =============================================
 -- Données de test
 -- Mots de passe : admin123 / etudiant123

@@ -34,11 +34,16 @@ require_once __DIR__ . '/includes/header.php';
                 </p>
             <?php endif; ?>
             <p class="card-text" style="white-space: pre-line"><?= htmlspecialchars($concours['description']) ?></p>
-            <?php if ($concours['pdf_url']): ?>
-                <a href="<?= htmlspecialchars($concours['pdf_url']) ?>" class="btn btn-outline-warning" target="_blank">
-                    <i class="bi bi-file-pdf me-1"></i>Descriptif complet
+            <div class="mt-3 d-flex gap-2 flex-wrap">
+                <a href="/concours.php" class="btn btn-warning fw-semibold">
+                    <i class="bi bi-arrow-right me-1"></i>Voir le concours complet
                 </a>
-            <?php endif; ?>
+                <?php if ($concours['pdf_url']): ?>
+                    <a href="<?= htmlspecialchars($concours['pdf_url']) ?>" class="btn btn-outline-warning" target="_blank">
+                        <i class="bi bi-file-pdf me-1"></i>Descriptif PDF
+                    </a>
+                <?php endif; ?>
+            </div>
         </div>
     </div>
 </section>
@@ -54,11 +59,14 @@ require_once __DIR__ . '/includes/header.php';
             <?php foreach ($news as $article): ?>
                 <div class="col-md-4">
                     <div class="card h-100 shadow-sm">
-                        <div class="card-body">
+                        <div class="card-body d-flex flex-column">
                             <h5 class="card-title fw-semibold"><?= htmlspecialchars($article['titre']) ?></h5>
-                            <p class="card-text text-muted small">
+                            <p class="card-text text-muted small flex-grow-1">
                                 <?= htmlspecialchars(mb_substr($article['contenu'], 0, 120)) ?>…
                             </p>
+                            <a href="/news.php?id=<?= $article['id'] ?>" class="btn btn-outline-dark btn-sm mt-2 align-self-start">
+                                Lire la suite <i class="bi bi-arrow-right ms-1"></i>
+                            </a>
                         </div>
                         <div class="card-footer text-muted small d-flex justify-content-between">
                             <span><i class="bi bi-person me-1"></i><?= htmlspecialchars($article['auteur']) ?></span>
@@ -67,6 +75,9 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+        <div class="text-end mt-3">
+            <a href="/news.php" class="btn btn-outline-secondary btn-sm">Toutes les news <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
     <?php else: ?>
         <p class="text-muted">Aucune news pour le moment.</p>
@@ -102,6 +113,10 @@ require_once __DIR__ . '/includes/header.php';
                     </div>
                 </div>
             <?php endforeach; ?>
+        </div>
+    <?php else: ?>
+        <div class="text-end mt-3">
+            <a href="/annonces.php" class="btn btn-outline-secondary btn-sm">Toutes les annonces <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
     <?php else: ?>
         <p class="text-muted">Aucune annonce pour le moment.</p>

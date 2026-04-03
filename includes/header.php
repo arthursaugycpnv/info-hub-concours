@@ -23,13 +23,13 @@
                     <a class="nav-link" href="/index.php"><i class="bi bi-house me-1"></i>Accueil</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index.php#concours"><i class="bi bi-trophy me-1"></i>Concours</a>
+                    <a class="nav-link" href="/concours.php"><i class="bi bi-trophy me-1"></i>Concours</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index.php#news"><i class="bi bi-newspaper me-1"></i>News</a>
+                    <a class="nav-link" href="/news.php"><i class="bi bi-newspaper me-1"></i>News</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/index.php#annonces"><i class="bi bi-tag me-1"></i>Annonces</a>
+                    <a class="nav-link" href="/annonces.php"><i class="bi bi-tag me-1"></i>Annonces</a>
                 </li>
             </ul>
         </div>
