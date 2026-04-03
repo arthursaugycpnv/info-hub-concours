@@ -44,10 +44,15 @@ if ($id > 0) {
                 <div class="fs-6 lh-lg" style="white-space: pre-line"><?= htmlspecialchars($article['contenu']) ?></div>
             </div>
         </article>
-        <div class="mt-3">
+        <div class="mt-3 d-flex gap-2">
             <a href="<?= BASE_URL ?>/news.php" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Toutes les news
             </a>
+            <?php if (isAdmin()): ?>
+                <a href="<?= BASE_URL ?>/admin/index.php?tab=news&edit=<?= $article['id'] ?>" class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil me-1"></i>Modifier cette news
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 </div>
