@@ -55,8 +55,8 @@ require_once __DIR__ . '/includes/header.php';
                         <span class="text-muted small">
                             <i class="bi bi-calendar3 me-1"></i><?= date('d.m.Y', strtotime($annonce['created_at'])) ?>
                         </span>
-                        <a href="mailto:<?= htmlspecialchars($annonce['contact_email']) ?>" class="btn btn-dark btn-sm">
-                            <i class="bi bi-envelope me-1"></i>Contacter
+                        <a href="<?= BASE_URL ?>/annonce.php?id=<?= $annonce['id'] ?>" class="btn btn-dark btn-sm">
+                            Voir <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
                 </div>

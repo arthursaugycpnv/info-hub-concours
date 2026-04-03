@@ -61,3 +61,12 @@ CREATE TABLE IF NOT EXISTS annonces (
     actif         BOOLEAN   NOT NULL DEFAULT 1,
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+CREATE TABLE IF NOT EXISTS commentaires (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    annonce_id  INT          NOT NULL,
+    auteur      VARCHAR(100) NOT NULL,
+    contenu     TEXT         NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (annonce_id) REFERENCES annonces(id) ON DELETE CASCADE
+);

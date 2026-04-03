@@ -105,9 +105,12 @@ require_once __DIR__ . '/includes/header.php';
                                 <?= htmlspecialchars(mb_substr($annonce['description'], 0, 100)) ?>…
                             </p>
                         </div>
-                        <div class="card-footer small">
-                            <a href="mailto:<?= htmlspecialchars($annonce['contact_email']) ?>" class="text-decoration-none">
+                        <div class="card-footer small d-flex justify-content-between align-items-center">
+                            <a href="mailto:<?= htmlspecialchars($annonce['contact_email']) ?>" class="text-decoration-none text-muted">
                                 <i class="bi bi-envelope me-1"></i><?= htmlspecialchars($annonce['contact_email']) ?>
+                            </a>
+                            <a href="<?= BASE_URL ?>/annonce.php?id=<?= $annonce['id'] ?>" class="btn btn-outline-dark btn-sm py-0">
+                                Voir <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
                     </div>

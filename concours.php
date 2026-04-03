@@ -84,7 +84,7 @@ require_once __DIR__ . '/includes/header.php';
                         Inscription enregistrée ! Vous recevrez une confirmation à votre adresse email.
                     </div>
                 <?php else: ?>
-                <form method="POST" action="/inscription.php">
+                <form method="POST" action="<?= BASE_URL ?>/inscription.php">
                     <input type="hidden" name="concours_id" value="<?= $concours['id'] ?>">
                     <div class="row g-3">
                         <div class="col-md-6">
