@@ -65,8 +65,11 @@ CREATE TABLE IF NOT EXISTS annonces (
 CREATE TABLE IF NOT EXISTS commentaires (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     annonce_id  INT          NOT NULL,
+    user_id     INT          DEFAULT NULL,
     auteur      VARCHAR(100) NOT NULL,
     contenu     TEXT         NOT NULL,
+    approuve    BOOLEAN      NOT NULL DEFAULT 0,
     created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (annonce_id) REFERENCES annonces(id) ON DELETE CASCADE
+    FOREIGN KEY (annonce_id) REFERENCES annonces(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id)    REFERENCES utilisateurs(id) ON DELETE SET NULL
 );

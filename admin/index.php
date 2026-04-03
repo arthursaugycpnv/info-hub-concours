@@ -2,8 +2,8 @@
 session_start();
 require_once __DIR__ . '/../config.php';
 
-if (!isset($_SESSION['user_id'])) {
-    header('Location: ' . BASE_URL . '/admin/login.php');
+if (!isAdmin()) {
+    header('Location: ' . BASE_URL . '/login.php');
     exit;
 }
 
@@ -121,6 +121,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Annonce supprimée.';
         }
     }
+
+    if ($action === 'approve_comment') {
+        $id = (int)($_POST['comment_id'] ?? 0);
+        if ($id) {
+            $db->prepare('UPDATE commentaires SET approuve = 1 WHERE id = ?')->execute([$id]);
+            $message = 'Commentaire approuvé.';
+        }
+    }
+
+    if ($action === 'delete_comment') {
+        $id = (int)($_POST['comment_id'] ?? 0);
+        if ($id) {
+            $db->prepare('DELETE FROM commentaires WHERE id = ?')->execute([$id]);
+            $message = 'Commentaire supprimé.';
+        }
+    }
 }
 
 // ── Données pour l'affichage ────────────────────────────────────────────────
@@ -132,6 +148,13 @@ $annonces = $db->query('
     LEFT JOIN commentaires c ON c.annonce_id = a.id
     GROUP BY a.id
     ORDER BY a.created_at DESC
+')->fetchAll();
+$pendingComments = $db->query('
+    SELECT c.*, a.titre AS annonce_titre
+    FROM commentaires c
+    JOIN annonces a ON a.id = c.annonce_id
+    WHERE c.approuve = 0
+    ORDER BY c.created_at ASC
 ')->fetchAll();
 ?>
 <!DOCTYPE html>
@@ -196,6 +219,14 @@ $annonces = $db->query('
             <a class="nav-link <?= $activeTab === 'annonces' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-annonces">
                 <i class="bi bi-tag me-1"></i>Annonces
                 <span class="badge bg-secondary ms-1"><?= count($annonces) ?></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $activeTab === 'moderation' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-moderation">
+                <i class="bi bi-shield-check me-1"></i>Modération
+                <?php if (count($pendingComments)): ?>
+                    <span class="badge bg-danger ms-1"><?= count($pendingComments) ?></span>
+                <?php endif; ?>
             </a>
         </li>
     </ul>
@@ -443,6 +474,71 @@ $annonces = $db->query('
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── MODÉRATION ── -->
+        <div class="tab-pane fade <?= $activeTab === 'moderation' ? 'show active' : '' ?>" id="tab-moderation">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-shield-check me-1"></i>Commentaires en attente de modération</span>
+                    <span class="badge bg-<?= count($pendingComments) ? 'danger' : 'success' ?>">
+                        <?= count($pendingComments) ?>
+                    </span>
+                </div>
+                <div class="card-body p-0">
+                    <?php if ($pendingComments): ?>
+                        <table class="table table-hover mb-0 align-middle">
+                            <thead class="table-light small">
+                                <tr>
+                                    <th>Annonce</th>
+                                    <th>Auteur</th>
+                                    <th>Message</th>
+                                    <th>Date</th>
+                                    <th class="text-center">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody class="small">
+                                <?php foreach ($pendingComments as $c): ?>
+                                <tr>
+                                    <td>
+                                        <a href="<?= BASE_URL ?>/annonce.php?id=<?= $c['annonce_id'] ?>" target="_blank" class="text-decoration-none">
+                                            <?= htmlspecialchars($c['annonce_titre']) ?>
+                                            <i class="bi bi-box-arrow-up-right ms-1 small"></i>
+                                        </a>
+                                    </td>
+                                    <td><?= htmlspecialchars($c['auteur']) ?></td>
+                                    <td class="text-muted" style="max-width:300px">
+                                        <?= htmlspecialchars(mb_strimwidth($c['contenu'], 0, 100, '…')) ?>
+                                    </td>
+                                    <td class="text-nowrap"><?= date('d.m.Y H:i', strtotime($c['created_at'])) ?></td>
+                                    <td class="text-center text-nowrap" onclick="event.stopPropagation()">
+                                        <form method="POST" class="d-inline">
+                                            <input type="hidden" name="action" value="approve_comment">
+                                            <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
+                                            <button class="btn btn-outline-success btn-sm" title="Approuver">
+                                                <i class="bi bi-check-lg"></i>
+                                            </button>
+                                        </form>
+                                        <form method="POST" class="d-inline" onsubmit="return confirm('Supprimer ce commentaire ?')">
+                                            <input type="hidden" name="action" value="delete_comment">
+                                            <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
+                                            <button class="btn btn-outline-danger btn-sm" title="Supprimer">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p class="text-muted text-center py-4 mb-0">
+                            <i class="bi bi-check-circle text-success me-2 fs-4"></i><br>
+                            Aucun commentaire en attente.
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

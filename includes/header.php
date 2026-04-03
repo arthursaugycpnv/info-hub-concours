@@ -32,21 +32,43 @@
                     <a class="nav-link" href="<?= BASE_URL ?>/annonces.php"><i class="bi bi-tag me-1"></i>Annonces</a>
                 </li>
             </ul>
+            <ul class="navbar-nav ms-3">
+                <?php if (isLoggedIn()): ?>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
+                            <i class="bi bi-person-circle me-1"></i><?= htmlspecialchars($_SESSION['user_nom']) ?>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <?php if (isAdmin()): ?>
+                                <li><a class="dropdown-item" href="<?= BASE_URL ?>/admin/index.php">
+                                    <i class="bi bi-speedometer2 me-1"></i>Dashboard admin
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            <?php endif; ?>
+                            <li><a class="dropdown-item text-danger" href="<?= BASE_URL ?>/logout.php">
+                                <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+                            </a></li>
+                        </ul>
+                    </li>
+                <?php else: ?>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-warning btn-sm text-dark fw-semibold px-3 ms-2"
+                           href="<?= BASE_URL ?>/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>">
+                            <i class="bi bi-box-arrow-in-right me-1"></i>Connexion
+                        </a>
+                    </li>
+                <?php endif; ?>
+            </ul>
         </div>
     </div>
 </nav>
 
 <?php if (isAdmin()): ?>
 <div class="bg-warning py-1 px-3 d-flex justify-content-between align-items-center small">
-    <span><i class="bi bi-shield-fill me-1"></i>Connecté en tant qu'admin : <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong></span>
-    <div class="d-flex gap-2">
-        <a href="<?= BASE_URL ?>/admin/index.php" class="btn btn-dark btn-sm py-0">
-            <i class="bi bi-speedometer2 me-1"></i>Dashboard
-        </a>
-        <a href="<?= BASE_URL ?>/admin/logout.php" class="btn btn-outline-dark btn-sm py-0">
-            <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
-        </a>
-    </div>
+    <span><i class="bi bi-shield-fill me-1"></i>Mode admin : <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong></span>
+    <a href="<?= BASE_URL ?>/admin/index.php" class="btn btn-dark btn-sm py-0">
+        <i class="bi bi-speedometer2 me-1"></i>Dashboard
+    </a>
 </div>
 <?php endif; ?>
 

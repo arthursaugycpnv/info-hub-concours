@@ -32,19 +32,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    $auteur  = trim($_POST['auteur'] ?? '');
+    if ($action === 'approve_comment' && isAdmin()) {
+        $cid = (int)($_POST['comment_id'] ?? 0);
+        if ($cid) {
+            $db->prepare('UPDATE commentaires SET approuve = 1 WHERE id = ? AND annonce_id = ?')->execute([$cid, $id]);
+        }
+        header('Location: ' . BASE_URL . '/annonce.php?id=' . $id . '#commentaires');
+        exit;
+    }
+
+    $auteur  = isLoggedIn() ? $_SESSION['user_nom'] : trim($_POST['auteur'] ?? '');
     $contenu = trim($_POST['contenu'] ?? '');
     if ($auteur && $contenu) {
-        $db->prepare('INSERT INTO commentaires (annonce_id, auteur, contenu) VALUES (?, ?, ?)')
-           ->execute([$id, $auteur, $contenu]);
-        header('Location: ' . BASE_URL . '/annonce.php?id=' . $id . '#commentaires');
+        $approuve = isLoggedIn() ? 1 : 0;
+        $userId   = isLoggedIn() ? $_SESSION['user_id'] : null;
+        $db->prepare('INSERT INTO commentaires (annonce_id, user_id, auteur, contenu, approuve) VALUES (?, ?, ?, ?, ?)')
+           ->execute([$id, $userId, $auteur, $contenu, $approuve]);
+        $msg = $approuve ? '' : '?pending=1';
+        header('Location: ' . BASE_URL . '/annonce.php?id=' . $id . $msg . '#commentaires');
         exit;
     } else {
         $erreurCommentaire = 'Nom et message obligatoires.';
     }
 }
 
-$commentaires = $db->prepare('SELECT * FROM commentaires WHERE annonce_id = ? ORDER BY created_at ASC');
+// Admin voit tout, visiteurs voient seulement les approuvés
+$commentaires = isAdmin()
+    ? $db->prepare('SELECT * FROM commentaires WHERE annonce_id = ? ORDER BY created_at ASC')
+    : $db->prepare('SELECT * FROM commentaires WHERE annonce_id = ? AND approuve = 1 ORDER BY created_at ASC');
 $commentaires->execute([$id]);
 $commentaires = $commentaires->fetchAll();
 
@@ -142,15 +157,29 @@ require_once __DIR__ . '/includes/header.php';
                                     <div>
                                         <strong class="small"><?= htmlspecialchars($c['auteur']) ?></strong>
                                         <span class="text-muted small ms-2"><?= date('d.m.Y', strtotime($c['created_at'])) ?></span>
+                                        <?php if (!$c['approuve']): ?>
+                                            <span class="badge bg-warning text-dark ms-1 small">En attente</span>
+                                        <?php endif; ?>
                                     </div>
                                     <?php if (isAdmin()): ?>
-                                        <form method="POST" class="ms-2" onsubmit="return confirm('Supprimer ce commentaire ?')">
-                                            <input type="hidden" name="action" value="delete_comment">
-                                            <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
-                                            <button class="btn btn-outline-danger btn-sm py-0 px-1 border-0">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
+                                        <div class="d-flex gap-1 ms-2">
+                                            <?php if (!$c['approuve']): ?>
+                                                <form method="POST">
+                                                    <input type="hidden" name="action" value="approve_comment">
+                                                    <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
+                                                    <button class="btn btn-outline-success btn-sm py-0 px-1 border-0" title="Approuver">
+                                                        <i class="bi bi-check-lg"></i>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
+                                            <form method="POST" onsubmit="return confirm('Supprimer ce commentaire ?')">
+                                                <input type="hidden" name="action" value="delete_comment">
+                                                <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
+                                                <button class="btn btn-outline-danger btn-sm py-0 px-1 border-0" title="Supprimer">
+                                                    <i class="bi bi-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     <?php endif; ?>
                                 </div>
                                 <p class="mb-0 small"><?= nl2br(htmlspecialchars($c['contenu'])) ?></p>
@@ -162,15 +191,31 @@ require_once __DIR__ . '/includes/header.php';
                 <?php endif; ?>
             </div>
             <div class="card-footer">
+                <?php if (isset($_GET['pending'])): ?>
+                    <div class="alert alert-info py-2 small mb-3">
+                        <i class="bi bi-clock me-1"></i>Votre commentaire est en attente de modération.
+                    </div>
+                <?php endif; ?>
                 <?php if ($erreurCommentaire): ?>
                     <div class="alert alert-danger py-2 small mb-3"><?= htmlspecialchars($erreurCommentaire) ?></div>
                 <?php endif; ?>
                 <form method="POST">
-                    <div class="mb-2">
-                        <input type="text" name="auteur" class="form-control form-control-sm"
-                               placeholder="Votre nom *" required
-                               value="<?= htmlspecialchars($_POST['auteur'] ?? '') ?>">
-                    </div>
+                    <?php if (!isLoggedIn()): ?>
+                        <div class="mb-2">
+                            <input type="text" name="auteur" class="form-control form-control-sm"
+                                   placeholder="Votre nom *" required
+                                   value="<?= htmlspecialchars($_POST['auteur'] ?? '') ?>">
+                        </div>
+                        <p class="text-muted small mb-2">
+                            <i class="bi bi-info-circle me-1"></i>
+                            <a href="<?= BASE_URL ?>/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Connectez-vous</a>
+                            pour que votre commentaire soit publié immédiatement.
+                        </p>
+                    <?php else: ?>
+                        <p class="small text-muted mb-2">
+                            <i class="bi bi-person-check me-1"></i>Commentaire en tant que <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong>
+                        </p>
+                    <?php endif; ?>
                     <div class="mb-2">
                         <textarea name="contenu" class="form-control form-control-sm" rows="3"
                                   placeholder="Votre message *" required><?= htmlspecialchars($_POST['contenu'] ?? '') ?></textarea>
