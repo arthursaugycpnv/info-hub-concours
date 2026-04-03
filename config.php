@@ -6,6 +6,15 @@ $_docroot = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
 define('BASE_URL', rtrim(str_replace($_docroot, '', $_root), '/'));
 unset($_root, $_docroot);
 
+// Session disponible partout (les pages admin l'ont déjà démarrée)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+function isAdmin(): bool {
+    return isset($_SESSION['user_id'], $_SESSION['user_nom']);
+}
+
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'infohub');
 define('DB_USER', 'root');       // À adapter selon ton environnement

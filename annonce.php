@@ -18,12 +18,22 @@ if (!$annonce) {
     exit;
 }
 
-// Traitement d'un nouveau commentaire
+// Traitement des formulaires
 $erreurCommentaire = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $action = $_POST['action'] ?? 'add_comment';
+
+    if ($action === 'delete_comment' && isAdmin()) {
+        $cid = (int)($_POST['comment_id'] ?? 0);
+        if ($cid) {
+            $db->prepare('DELETE FROM commentaires WHERE id = ? AND annonce_id = ?')->execute([$cid, $id]);
+        }
+        header('Location: ' . BASE_URL . '/annonce.php?id=' . $id . '#commentaires');
+        exit;
+    }
+
     $auteur  = trim($_POST['auteur'] ?? '');
     $contenu = trim($_POST['contenu'] ?? '');
-
     if ($auteur && $contenu) {
         $db->prepare('INSERT INTO commentaires (annonce_id, auteur, contenu) VALUES (?, ?, ?)')
            ->execute([$id, $auteur, $contenu]);
@@ -84,10 +94,15 @@ require_once __DIR__ . '/includes/header.php';
             </div>
         </div>
 
-        <div class="mt-3">
+        <div class="mt-3 d-flex gap-2">
             <a href="<?= BASE_URL ?>/annonces.php" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Toutes les annonces
             </a>
+            <?php if (isAdmin()): ?>
+                <a href="<?= BASE_URL ?>/admin/index.php#tab-annonces" class="btn btn-warning btn-sm">
+                    <i class="bi bi-pencil me-1"></i>Gérer dans l'admin
+                </a>
+            <?php endif; ?>
         </div>
     </div>
 
@@ -123,9 +138,20 @@ require_once __DIR__ . '/includes/header.php';
                     <ul class="list-group list-group-flush">
                         <?php foreach ($commentaires as $c): ?>
                             <li class="list-group-item">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <strong class="small"><?= htmlspecialchars($c['auteur']) ?></strong>
-                                    <span class="text-muted small"><?= date('d.m.Y', strtotime($c['created_at'])) ?></span>
+                                <div class="d-flex justify-content-between align-items-start mb-1">
+                                    <div>
+                                        <strong class="small"><?= htmlspecialchars($c['auteur']) ?></strong>
+                                        <span class="text-muted small ms-2"><?= date('d.m.Y', strtotime($c['created_at'])) ?></span>
+                                    </div>
+                                    <?php if (isAdmin()): ?>
+                                        <form method="POST" class="ms-2" onsubmit="return confirm('Supprimer ce commentaire ?')">
+                                            <input type="hidden" name="action" value="delete_comment">
+                                            <input type="hidden" name="comment_id" value="<?= $c['id'] ?>">
+                                            <button class="btn btn-outline-danger btn-sm py-0 px-1 border-0">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    <?php endif; ?>
                                 </div>
                                 <p class="mb-0 small"><?= nl2br(htmlspecialchars($c['contenu'])) ?></p>
                             </li>

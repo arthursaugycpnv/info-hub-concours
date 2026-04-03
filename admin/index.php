@@ -82,7 +82,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 // ── Données pour l'affichage ────────────────────────────────────────────────
 $concours = $db->query('SELECT * FROM concours ORDER BY created_at DESC LIMIT 5')->fetchAll();
 $news     = $db->query('SELECT * FROM news ORDER BY created_at DESC')->fetchAll();
-$annonces = $db->query('SELECT * FROM annonces ORDER BY created_at DESC')->fetchAll();
+$annonces = $db->query('
+    SELECT a.*, COUNT(c.id) AS nb_commentaires
+    FROM annonces a
+    LEFT JOIN commentaires c ON c.annonce_id = a.id
+    GROUP BY a.id
+    ORDER BY a.created_at DESC
+')->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -315,16 +321,42 @@ $annonces = $db->query('SELECT * FROM annonces ORDER BY created_at DESC')->fetch
                     <div class="card shadow-sm">
                         <div class="card-header fw-semibold">Annonces publiées</div>
                         <div class="card-body p-0">
-                            <table class="table table-sm table-hover mb-0">
+                            <table class="table table-sm table-hover mb-0 align-middle">
                                 <thead class="table-light">
-                                    <tr><th>Titre</th><th>Prix</th><th>Contact</th><th></th></tr>
+                                    <tr>
+                                        <th>Titre</th>
+                                        <th>Prix</th>
+                                        <th>Contact</th>
+                                        <th>Date</th>
+                                        <th><i class="bi bi-chat-dots"></i></th>
+                                        <th>Statut</th>
+                                        <th></th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <?php foreach ($annonces as $a): ?>
                                     <tr>
-                                        <td class="small"><?= htmlspecialchars($a['titre']) ?></td>
+                                        <td class="small">
+                                            <a href="<?= BASE_URL ?>/annonce.php?id=<?= $a['id'] ?>" target="_blank" class="text-decoration-none fw-semibold">
+                                                <?= htmlspecialchars($a['titre']) ?>
+                                                <i class="bi bi-box-arrow-up-right ms-1 text-muted" style="font-size:.7rem"></i>
+                                            </a>
+                                        </td>
                                         <td class="small"><?= $a['prix'] !== null ? 'CHF '.$a['prix'] : '—' ?></td>
-                                        <td class="small"><?= htmlspecialchars($a['contact_email']) ?></td>
+                                        <td class="small">
+                                            <a href="mailto:<?= htmlspecialchars($a['contact_email']) ?>" class="text-decoration-none">
+                                                <?= htmlspecialchars($a['contact_email']) ?>
+                                            </a>
+                                        </td>
+                                        <td class="small text-muted"><?= date('d.m.Y', strtotime($a['created_at'])) ?></td>
+                                        <td class="text-center">
+                                            <span class="badge <?= $a['nb_commentaires'] > 0 ? 'bg-primary' : 'bg-light text-muted border' ?>">
+                                                <?= $a['nb_commentaires'] ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <?= $a['actif'] ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>' ?>
+                                        </td>
                                         <td>
                                             <form method="POST" onsubmit="return confirm('Supprimer cette annonce ?')">
                                                 <input type="hidden" name="action" value="delete_annonce">

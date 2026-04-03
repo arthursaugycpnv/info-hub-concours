@@ -36,4 +36,18 @@
     </div>
 </nav>
 
+<?php if (isAdmin()): ?>
+<div class="bg-warning py-1 px-3 d-flex justify-content-between align-items-center small">
+    <span><i class="bi bi-shield-fill me-1"></i>Connecté en tant qu'admin : <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong></span>
+    <div class="d-flex gap-2">
+        <a href="<?= BASE_URL ?>/admin/index.php" class="btn btn-dark btn-sm py-0">
+            <i class="bi bi-speedometer2 me-1"></i>Dashboard
+        </a>
+        <a href="<?= BASE_URL ?>/admin/logout.php" class="btn btn-outline-dark btn-sm py-0">
+            <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
+        </a>
+    </div>
+</div>
+<?php endif; ?>
+
 <main class="container py-4">
