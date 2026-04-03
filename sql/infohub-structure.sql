@@ -3,7 +3,9 @@
 -- Importer en premier
 -- ============================================================
 
-CREATE DATABASE IF NOT EXISTS infohub
+DROP DATABASE IF EXISTS infohub;
+
+CREATE DATABASE infohub
     CHARACTER SET utf8mb4
     COLLATE utf8mb4_unicode_ci;
 
