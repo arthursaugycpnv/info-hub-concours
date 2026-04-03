@@ -12,7 +12,7 @@ if ($id > 0) {
     $article = $article->fetch();
 
     if (!$article) {
-        header('Location: /news.php');
+        header('Location: ' . BASE_URL . '/news.php');
         exit;
     }
 
@@ -22,8 +22,8 @@ if ($id > 0) {
 
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/index.php">Accueil</a></li>
-        <li class="breadcrumb-item"><a href="/news.php">News</a></li>
+        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/index.php">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/news.php">News</a></li>
         <li class="breadcrumb-item active"><?= htmlspecialchars($article['titre']) ?></li>
     </ol>
 </nav>
@@ -45,7 +45,7 @@ if ($id > 0) {
             </div>
         </article>
         <div class="mt-3">
-            <a href="/news.php" class="btn btn-outline-secondary btn-sm">
+            <a href="<?= BASE_URL ?>/news.php" class="btn btn-outline-secondary btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Toutes les news
             </a>
         </div>
@@ -66,7 +66,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/index.php">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/index.php">Accueil</a></li>
         <li class="breadcrumb-item active">News</li>
     </ol>
 </nav>
@@ -88,7 +88,7 @@ require_once __DIR__ . '/includes/header.php';
                         <p class="card-text text-muted small flex-grow-1">
                             <?= htmlspecialchars(mb_substr($article['contenu'], 0, 150)) ?>…
                         </p>
-                        <a href="/news.php?id=<?= $article['id'] ?>" class="btn btn-outline-dark btn-sm mt-2 align-self-start">
+                        <a href="<?= BASE_URL ?>/news.php?id=<?= $article['id'] ?>" class="btn btn-outline-dark btn-sm mt-2 align-self-start">
                             Lire la suite <i class="bi bi-arrow-right ms-1"></i>
                         </a>
                     </div>
@@ -104,7 +104,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="text-center py-5 text-muted">
         <i class="bi bi-newspaper fs-1 d-block mb-3"></i>
         <p>Aucune news pour le moment.</p>
-        <a href="/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
+        <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
     </div>
 <?php endif; ?>
 

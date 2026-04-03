@@ -1,12 +1,11 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /admin/login.php');
+    header('Location: ' . BASE_URL . '/admin/login.php');
     exit;
 }
-
-require_once __DIR__ . '/../config.php';
 
 $db = getDB();
 $message = '';
@@ -100,7 +99,7 @@ $annonces = $db->query('SELECT * FROM annonces ORDER BY created_at DESC')->fetch
     <span class="navbar-brand fw-bold"><i class="bi bi-cpu me-2"></i>InfoHub — Admin</span>
     <div class="d-flex align-items-center gap-3">
         <span class="text-secondary small"><?= htmlspecialchars($_SESSION['user_nom']) ?></span>
-        <a href="/admin/logout.php" class="btn btn-outline-secondary btn-sm">
+        <a href="<?= BASE_URL ?>/admin/logout.php" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
         </a>
     </div>

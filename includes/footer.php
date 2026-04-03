@@ -6,7 +6,7 @@
         <span class="mx-2">&bull;</span>
         <a href="mailto:CPNV_Infohub@eduvaud.ch" class="text-secondary">CPNV_Infohub@eduvaud.ch</a>
         <span class="mx-2">&bull;</span>
-        <a href="/admin/login.php" class="text-secondary"><i class="bi bi-lock me-1"></i>Admin</a>
+        <a href="<?= BASE_URL ?>/admin/login.php" class="text-secondary"><i class="bi bi-lock me-1"></i>Admin</a>
     </div>
 </footer>
 

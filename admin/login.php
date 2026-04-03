@@ -1,12 +1,11 @@
 <?php
 session_start();
+require_once __DIR__ . '/../config.php';
 
 if (isset($_SESSION['user_id'])) {
-    header('Location: /admin/index.php');
+    header('Location: ' . BASE_URL . '/admin/index.php');
     exit;
 }
-
-require_once __DIR__ . '/../config.php';
 
 $error = '';
 
@@ -23,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             session_regenerate_id(true);
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['user_nom'] = $user['nom'];
-            header('Location: /admin/index.php');
+            header('Location: ' . BASE_URL . '/admin/index.php');
             exit;
         }
     }
@@ -64,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
             <div class="text-center mt-3">
-                <a href="/index.php" class="text-muted small">← Retour au site</a>
+                <a href="<?= BASE_URL ?>/index.php" class="text-muted small">← Retour au site</a>
             </div>
         </div>
     </div>

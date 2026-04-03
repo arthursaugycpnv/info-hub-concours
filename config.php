@@ -1,5 +1,11 @@
 <?php
 
+// Détecte automatiquement le sous-dossier (vhost .test ou localhost/info-hub-concours-private/)
+$_root    = str_replace('\\', '/', realpath(__DIR__));
+$_docroot = str_replace('\\', '/', realpath($_SERVER['DOCUMENT_ROOT']));
+define('BASE_URL', rtrim(str_replace($_docroot, '', $_root), '/'));
+unset($_root, $_docroot);
+
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'infohub');
 define('DB_USER', 'root');       // À adapter selon ton environnement

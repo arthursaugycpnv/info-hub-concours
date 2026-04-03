@@ -35,7 +35,7 @@ require_once __DIR__ . '/includes/header.php';
             <?php endif; ?>
             <p class="card-text" style="white-space: pre-line"><?= htmlspecialchars($concours['description']) ?></p>
             <div class="mt-3 d-flex gap-2 flex-wrap">
-                <a href="/concours.php" class="btn btn-warning fw-semibold">
+                <a href="<?= BASE_URL ?>/concours.php" class="btn btn-warning fw-semibold">
                     <i class="bi bi-arrow-right me-1"></i>Voir le concours complet
                 </a>
                 <?php if ($concours['pdf_url']): ?>
@@ -64,7 +64,7 @@ require_once __DIR__ . '/includes/header.php';
                             <p class="card-text text-muted small flex-grow-1">
                                 <?= htmlspecialchars(mb_substr($article['contenu'], 0, 120)) ?>…
                             </p>
-                            <a href="/news.php?id=<?= $article['id'] ?>" class="btn btn-outline-dark btn-sm mt-2 align-self-start">
+                            <a href="<?= BASE_URL ?>/news.php?id=<?= $article['id'] ?>" class="btn btn-outline-dark btn-sm mt-2 align-self-start">
                                 Lire la suite <i class="bi bi-arrow-right ms-1"></i>
                             </a>
                         </div>
@@ -77,7 +77,7 @@ require_once __DIR__ . '/includes/header.php';
             <?php endforeach; ?>
         </div>
         <div class="text-end mt-3">
-            <a href="/news.php" class="btn btn-outline-secondary btn-sm">Toutes les news <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="<?= BASE_URL ?>/news.php" class="btn btn-outline-secondary btn-sm">Toutes les news <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
     <?php else: ?>
         <p class="text-muted">Aucune news pour le moment.</p>
@@ -115,7 +115,7 @@ require_once __DIR__ . '/includes/header.php';
             <?php endforeach; ?>
         </div>
         <div class="text-end mt-3">
-            <a href="/annonces.php" class="btn btn-outline-secondary btn-sm">Toutes les annonces <i class="bi bi-arrow-right ms-1"></i></a>
+            <a href="<?= BASE_URL ?>/annonces.php" class="btn btn-outline-secondary btn-sm">Toutes les annonces <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
     <?php else: ?>
         <p class="text-muted">Aucune annonce pour le moment.</p>

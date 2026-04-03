@@ -11,7 +11,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/index.php">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/index.php">Accueil</a></li>
         <li class="breadcrumb-item active">Annonces</li>
     </ol>
 </nav>
@@ -69,7 +69,7 @@ require_once __DIR__ . '/includes/header.php';
         <p>Aucune annonce pour le moment.<br>
            Pour publier une annonce, contactez <a href="mailto:CPNV_Infohub@eduvaud.ch">CPNV_Infohub@eduvaud.ch</a>
         </p>
-        <a href="/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
+        <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
     </div>
 <?php endif; ?>
 

@@ -13,7 +13,7 @@ require_once __DIR__ . '/includes/header.php';
 
 <nav aria-label="breadcrumb" class="mb-4">
     <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="/index.php">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="<?= BASE_URL ?>/index.php">Accueil</a></li>
         <li class="breadcrumb-item active">Concours du mois</li>
     </ol>
 </nav>
@@ -125,7 +125,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="text-center py-5 text-muted">
     <i class="bi bi-trophy fs-1 d-block mb-3"></i>
     <p>Aucun concours en cours pour le moment.<br>Revenez bientôt !</p>
-    <a href="/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
+    <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-secondary mt-2">← Retour à l'accueil</a>
 </div>
 <?php endif; ?>
 
