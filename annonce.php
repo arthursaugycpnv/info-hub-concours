@@ -21,6 +21,7 @@ if (!$annonce) {
 // Traitement des formulaires
 $erreurCommentaire = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $action = $_POST['action'] ?? 'add_comment';
 
     if ($action === 'delete_comment' && isAdmin()) {

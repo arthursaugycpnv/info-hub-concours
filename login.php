@@ -11,6 +11,7 @@ $error    = '';
 $redirect = $_GET['redirect'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $email = trim($_POST['email'] ?? '');
     $mdp   = $_POST['mot_de_passe'] ?? '';
 
@@ -58,6 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <?= csrf_field() ?>
                 <?php if ($redirect): ?>
                     <input type="hidden" name="redirect" value="<?= htmlspecialchars($redirect) ?>">
                 <?php endif; ?>

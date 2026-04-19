@@ -10,6 +10,7 @@ if (isset($_SESSION['user_id'])) {
 $error = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $email = trim($_POST['email'] ?? '');
     $mdp   = $_POST['mot_de_passe'] ?? '';
 
@@ -54,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <?= csrf_field() ?>
                 <div class="mb-3">
                     <label class="form-label small fw-semibold">Email</label>
                     <input type="email" name="email" class="form-control"

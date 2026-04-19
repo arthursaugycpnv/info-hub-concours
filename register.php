@@ -10,6 +10,7 @@ $errors  = [];
 $values  = ['nom' => '', 'email' => '', 'role' => 'etudiant'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $nom     = trim($_POST['nom'] ?? '');
     $email   = trim($_POST['email'] ?? '');
     $mdp     = $_POST['mot_de_passe'] ?? '';
@@ -78,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <?php endif; ?>
 
             <form method="POST" novalidate>
+                <?= csrf_field() ?>
                 <div class="mb-3">
                     <label class="form-label small fw-semibold">Nom complet *</label>
                     <input type="text" name="nom" class="form-control"

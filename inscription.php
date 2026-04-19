@@ -6,6 +6,8 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+csrf_verify();
+
 $nom          = trim($_POST['nom'] ?? '');
 $email        = trim($_POST['email'] ?? '');
 $type         = $_POST['type'] === 'groupe' ? 'groupe' : 'individuel';

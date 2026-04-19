@@ -5,6 +5,8 @@ $db = getDB();
 $erreur  = '';
 $success = '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') { csrf_verify(); }
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isLoggedIn()) {
     $titre   = trim($_POST['titre'] ?? '');
     $contenu = trim($_POST['contenu'] ?? '');

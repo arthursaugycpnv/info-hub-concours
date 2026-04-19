@@ -14,6 +14,7 @@ $erreur  = '';
 // ── Traitement des formulaires ──────────────────────────────────────────────
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    csrf_verify();
     $action = $_POST['action'] ?? '';
 
     if ($action === 'add_concours') {
@@ -862,6 +863,8 @@ $pendingComments = $db->query('
 </div>
 
 <script>
+(function(){var t='<?= csrf_token() ?>';document.querySelectorAll('form').forEach(function(f){if(f.method.toLowerCase()==='post'&&!f.querySelector('[name="csrf_token"]')){var i=document.createElement('input');i.type='hidden';i.name='csrf_token';i.value=t;f.appendChild(i);}});})();
+
 // Pré-remplissage des modals d'édition
 function setImagePreview(containerId, src, baseUrl) {
     const el = document.getElementById(containerId);

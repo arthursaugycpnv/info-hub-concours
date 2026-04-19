@@ -43,5 +43,8 @@
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+(function(){var t='<?= csrf_token() ?>';document.querySelectorAll('form').forEach(function(f){if(f.method.toLowerCase()==='post'&&!f.querySelector('[name="csrf_token"]')){var i=document.createElement('input');i.type='hidden';i.name='csrf_token';i.value=t;f.appendChild(i);}});})();
+</script>
 </body>
 </html>
