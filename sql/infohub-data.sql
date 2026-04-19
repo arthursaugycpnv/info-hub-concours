@@ -30,6 +30,10 @@ INSERT INTO news (titre, contenu, auteur) VALUES
     'JP Chavey'
 );
 
+INSERT INTO pubs (user_id, titre, contenu) VALUES
+(2, 'Co-voiturage Sainte-Croix ↔ Yverdon', 'Je cherche quelqu''un pour partager le trajet Sainte-Croix / Yverdon le lundi matin et vendredi soir. Départ ~7h30 depuis la gare de Sainte-Croix. Participation aux frais bienvenue. Contactez-moi par email.'),
+(2, 'Clavier mécanique Cherry MX — gratuit', 'Je donne un vieux clavier mécanique Cherry MX Brown, AZERTY, USB. Fonctionne parfaitement. À récupérer à l''école.');
+
 INSERT INTO annonces (titre, description, prix, contact_email, actif) VALUES
 (
     '3 beamers Sony VPL-VW270ES',

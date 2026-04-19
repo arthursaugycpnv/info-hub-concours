@@ -31,6 +31,9 @@
                 <li class="nav-item">
                     <a class="nav-link" href="<?= BASE_URL ?>/annonces.php"><i class="bi bi-tag me-1"></i>Annonces</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="<?= BASE_URL ?>/pubs.php"><i class="bi bi-megaphone me-1"></i>Pubs</a>
+                </li>
             </ul>
             <ul class="navbar-nav ms-3">
                 <?php if (isLoggedIn()): ?>

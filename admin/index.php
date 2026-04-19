@@ -137,6 +137,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $message = 'Commentaire supprimé.';
         }
     }
+
+    if ($action === 'delete_pub') {
+        $id = (int)($_POST['pub_id'] ?? 0);
+        if ($id) {
+            $db->prepare('DELETE FROM pubs WHERE id = ?')->execute([$id]);
+            $message = 'Publicité supprimée.';
+        }
+    }
 }
 
 // ── Données pour l'affichage ────────────────────────────────────────────────
@@ -154,6 +162,13 @@ $inscriptions = $db->query('
     FROM inscriptions i
     JOIN concours co ON co.id = i.concours_id
     ORDER BY i.created_at DESC
+')->fetchAll();
+
+$pubs = $db->query('
+    SELECT p.*, u.nom AS auteur_nom
+    FROM pubs p
+    JOIN utilisateurs u ON u.id = p.user_id
+    ORDER BY p.created_at DESC
 ')->fetchAll();
 
 $pendingComments = $db->query('
@@ -226,6 +241,12 @@ $pendingComments = $db->query('
             <a class="nav-link <?= $activeTab === 'annonces' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-annonces">
                 <i class="bi bi-tag me-1"></i>Annonces
                 <span class="badge bg-secondary ms-1"><?= count($annonces) ?></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $activeTab === 'pubs' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-pubs">
+                <i class="bi bi-megaphone me-1"></i>Pubs
+                <span class="badge bg-secondary ms-1"><?= count($pubs) ?></span>
             </a>
         </li>
         <li class="nav-item">
@@ -487,6 +508,58 @@ $pendingComments = $db->query('
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── PUBS ── -->
+        <div class="tab-pane fade <?= $activeTab === 'pubs' ? 'show active' : '' ?>" id="tab-pubs">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-megaphone me-1"></i>Publicités des membres</span>
+                    <span class="badge bg-secondary"><?= count($pubs) ?></span>
+                </div>
+                <div class="card-body p-0">
+                    <?php if ($pubs): ?>
+                        <table class="table table-hover mb-0 align-middle small">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Auteur</th>
+                                    <th>Aperçu</th>
+                                    <th>Date</th>
+                                    <th class="text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($pubs as $pub): ?>
+                                <tr style="cursor:pointer"
+                                    onclick="window.open('<?= BASE_URL ?>/pubs.php', '_blank')">
+                                    <td class="fw-semibold"><?= htmlspecialchars($pub['titre']) ?></td>
+                                    <td><?= htmlspecialchars($pub['auteur_nom']) ?></td>
+                                    <td class="text-muted" style="max-width:280px">
+                                        <?= htmlspecialchars(mb_strimwidth($pub['contenu'], 0, 80, '…')) ?>
+                                    </td>
+                                    <td class="text-nowrap"><?= date('d.m.Y', strtotime($pub['created_at'])) ?></td>
+                                    <td class="text-center" onclick="event.stopPropagation()">
+                                        <form method="POST" onsubmit="return confirm('Supprimer cette publicité ?')">
+                                            <input type="hidden" name="action" value="delete_pub">
+                                            <input type="hidden" name="pub_id" value="<?= $pub['id'] ?>">
+                                            <button class="btn btn-outline-danger btn-sm">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    <?php else: ?>
+                        <p class="text-muted text-center py-4 mb-0">
+                            <i class="bi bi-megaphone fs-4 d-block mb-2 opacity-50"></i>
+                            Aucune publicité pour l'instant.
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>

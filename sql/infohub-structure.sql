@@ -62,6 +62,15 @@ CREATE TABLE IF NOT EXISTS annonces (
     created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS pubs (
+    id          INT AUTO_INCREMENT PRIMARY KEY,
+    user_id     INT          NOT NULL,
+    titre       VARCHAR(200) NOT NULL,
+    contenu     TEXT         NOT NULL,
+    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES utilisateurs(id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS commentaires (
     id          INT AUTO_INCREMENT PRIMARY KEY,
     annonce_id  INT          NOT NULL,
