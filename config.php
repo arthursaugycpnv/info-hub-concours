@@ -11,6 +11,33 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+function handleImageUpload(string $field): ?string {
+    if (empty($_FILES[$field]['name'])) return null;
+
+    $file = $_FILES[$field];
+    if ($file['error'] !== UPLOAD_ERR_OK) return null;
+
+    $allowed = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    $finfo   = new finfo(FILEINFO_MIME_TYPE);
+    $mime    = $finfo->file($file['tmp_name']);
+    if (!in_array($mime, $allowed, true)) return null;
+
+    if ($file['size'] > 5 * 1024 * 1024) return null; // 5 MB max
+
+    $ext      = match($mime) {
+        'image/jpeg' => 'jpg',
+        'image/png'  => 'png',
+        'image/gif'  => 'gif',
+        'image/webp' => 'webp',
+    };
+    $filename = bin2hex(random_bytes(12)) . '.' . $ext;
+    $dest     = __DIR__ . '/uploads/' . $filename;
+
+    if (!move_uploaded_file($file['tmp_name'], $dest)) return null;
+
+    return '/uploads/' . $filename;
+}
+
 function isLoggedIn(): bool {
     return isset($_SESSION['user_id']);
 }

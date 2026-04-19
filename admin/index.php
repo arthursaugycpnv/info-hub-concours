@@ -37,10 +37,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $titre   = trim($_POST['titre'] ?? '');
         $contenu = trim($_POST['contenu'] ?? '');
         $auteur  = trim($_POST['auteur'] ?? '');
+        $image   = handleImageUpload('image');
 
         if ($titre && $contenu && $auteur) {
-            $stmt = $db->prepare('INSERT INTO news (titre, contenu, auteur) VALUES (?, ?, ?)');
-            $stmt->execute([$titre, $contenu, $auteur]);
+            $db->prepare('INSERT INTO news (titre, contenu, auteur, image) VALUES (?, ?, ?, ?)')
+               ->execute([$titre, $contenu, $auteur, $image]);
             $message = 'News ajoutée avec succès.';
         } else {
             $erreur = 'Tous les champs sont obligatoires.';
@@ -52,10 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = trim($_POST['description'] ?? '');
         $prix        = $_POST['prix'] !== '' ? (float)$_POST['prix'] : null;
         $contact     = trim($_POST['contact_email'] ?? '');
+        $image       = handleImageUpload('image');
 
         if ($titre && $description && $contact) {
-            $stmt = $db->prepare('INSERT INTO annonces (titre, description, prix, contact_email, actif) VALUES (?, ?, ?, ?, 1)');
-            $stmt->execute([$titre, $description, $prix, $contact]);
+            $db->prepare('INSERT INTO annonces (titre, description, prix, contact_email, image, actif) VALUES (?, ?, ?, ?, ?, 1)')
+               ->execute([$titre, $description, $prix, $contact, $image]);
             $message = 'Annonce ajoutée avec succès.';
         } else {
             $erreur = 'Titre, description et email obligatoires.';
@@ -67,9 +69,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $titre   = trim($_POST['titre'] ?? '');
         $contenu = trim($_POST['contenu'] ?? '');
         $auteur  = trim($_POST['auteur'] ?? '');
+        $image   = handleImageUpload('image');
         if ($id && $titre && $contenu && $auteur) {
-            $db->prepare('UPDATE news SET titre=?, contenu=?, auteur=? WHERE id=?')
-               ->execute([$titre, $contenu, $auteur, $id]);
+            if ($image) {
+                $db->prepare('UPDATE news SET titre=?, contenu=?, auteur=?, image=? WHERE id=?')
+                   ->execute([$titre, $contenu, $auteur, $image, $id]);
+            } else {
+                $db->prepare('UPDATE news SET titre=?, contenu=?, auteur=? WHERE id=?')
+                   ->execute([$titre, $contenu, $auteur, $id]);
+            }
             $message = 'News modifiée.';
         } else {
             $erreur = 'Tous les champs sont obligatoires.';
@@ -82,9 +90,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $description = trim($_POST['description'] ?? '');
         $prix        = $_POST['prix'] !== '' ? (float)$_POST['prix'] : null;
         $contact     = trim($_POST['contact_email'] ?? '');
+        $image       = handleImageUpload('image');
         if ($id && $titre && $description && $contact) {
-            $db->prepare('UPDATE annonces SET titre=?, description=?, prix=?, contact_email=? WHERE id=?')
-               ->execute([$titre, $description, $prix, $contact, $id]);
+            if ($image) {
+                $db->prepare('UPDATE annonces SET titre=?, description=?, prix=?, contact_email=?, image=? WHERE id=?')
+                   ->execute([$titre, $description, $prix, $contact, $image, $id]);
+            } else {
+                $db->prepare('UPDATE annonces SET titre=?, description=?, prix=?, contact_email=? WHERE id=?')
+                   ->execute([$titre, $description, $prix, $contact, $id]);
+            }
             $message = 'Annonce modifiée.';
         } else {
             $erreur = 'Titre, description et email obligatoires.';
@@ -349,7 +363,7 @@ $pendingComments = $db->query('
                     <div class="card shadow-sm">
                         <div class="card-header fw-semibold">Nouvelle news</div>
                         <div class="card-body">
-                            <form method="POST">
+                            <form method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="add_news">
                                 <div class="mb-3">
                                     <label class="form-label small fw-semibold">Titre *</label>
@@ -362,6 +376,10 @@ $pendingComments = $db->query('
                                 <div class="mb-3">
                                     <label class="form-label small fw-semibold">Auteur *</label>
                                     <input type="text" name="auteur" class="form-control form-control-sm" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Image <span class="fw-normal text-muted">(optionnel, max 5 Mo)</span></label>
+                                    <input type="file" name="image" class="form-control form-control-sm" accept="image/*">
                                 </div>
                                 <button type="submit" class="btn btn-dark btn-sm w-100">
                                     <i class="bi bi-plus-circle me-1"></i>Publier
@@ -391,7 +409,8 @@ $pendingComments = $db->query('
                                                     data-id="<?= $n['id'] ?>"
                                                     data-titre="<?= htmlspecialchars($n['titre'], ENT_QUOTES) ?>"
                                                     data-contenu="<?= htmlspecialchars($n['contenu'], ENT_QUOTES) ?>"
-                                                    data-auteur="<?= htmlspecialchars($n['auteur'], ENT_QUOTES) ?>">
+                                                    data-auteur="<?= htmlspecialchars($n['auteur'], ENT_QUOTES) ?>"
+                                                    data-image="<?= htmlspecialchars($n['image'] ?? '', ENT_QUOTES) ?>">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
                                                 <form method="POST" onsubmit="return confirm('Supprimer cette news ?')">
@@ -420,7 +439,7 @@ $pendingComments = $db->query('
                     <div class="card shadow-sm">
                         <div class="card-header fw-semibold">Nouvelle annonce</div>
                         <div class="card-body">
-                            <form method="POST">
+                            <form method="POST" enctype="multipart/form-data">
                                 <input type="hidden" name="action" value="add_annonce">
                                 <div class="mb-3">
                                     <label class="form-label small fw-semibold">Titre *</label>
@@ -439,6 +458,10 @@ $pendingComments = $db->query('
                                         <label class="form-label small fw-semibold">Email contact *</label>
                                         <input type="email" name="contact_email" class="form-control form-control-sm" required>
                                     </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label small fw-semibold">Image <span class="fw-normal text-muted">(optionnel, max 5 Mo)</span></label>
+                                    <input type="file" name="image" class="form-control form-control-sm" accept="image/*">
                                 </div>
                                 <button type="submit" class="btn btn-dark btn-sm w-100">
                                     <i class="bi bi-plus-circle me-1"></i>Publier
@@ -490,7 +513,8 @@ $pendingComments = $db->query('
                                                     data-titre="<?= htmlspecialchars($a['titre'], ENT_QUOTES) ?>"
                                                     data-description="<?= htmlspecialchars($a['description'], ENT_QUOTES) ?>"
                                                     data-prix="<?= $a['prix'] ?? '' ?>"
-                                                    data-contact="<?= htmlspecialchars($a['contact_email'], ENT_QUOTES) ?>">
+                                                    data-contact="<?= htmlspecialchars($a['contact_email'], ENT_QUOTES) ?>"
+                                                    data-image="<?= htmlspecialchars($a['image'] ?? '', ENT_QUOTES) ?>">
                                                     <i class="bi bi-pencil"></i>
                                                 </button>
                                                 <form method="POST" onsubmit="return confirm('Supprimer cette annonce ?')">
@@ -714,7 +738,7 @@ $pendingComments = $db->query('
 <div class="modal fade" id="modalEditNews" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit_news">
                 <input type="hidden" name="id" id="editNewsId">
                 <div class="modal-header">
@@ -733,6 +757,11 @@ $pendingComments = $db->query('
                     <div class="mb-3">
                         <label class="form-label small fw-semibold">Auteur *</label>
                         <input type="text" name="auteur" id="editNewsAuteur" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Nouvelle image <span class="fw-normal text-muted">(laisser vide pour conserver l'actuelle)</span></label>
+                        <div id="editNewsImagePreview" class="mb-2"></div>
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -788,7 +817,7 @@ $pendingComments = $db->query('
 <div class="modal fade" id="modalEditAnnonce" tabindex="-1">
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
-            <form method="POST">
+            <form method="POST" enctype="multipart/form-data">
                 <input type="hidden" name="action" value="edit_annonce">
                 <input type="hidden" name="id" id="editAnnonceId">
                 <div class="modal-header">
@@ -804,7 +833,7 @@ $pendingComments = $db->query('
                         <label class="form-label small fw-semibold">Description *</label>
                         <textarea name="description" id="editAnnonceDescription" class="form-control" rows="5" required></textarea>
                     </div>
-                    <div class="row g-2">
+                    <div class="row g-2 mb-3">
                         <div class="col">
                             <label class="form-label small fw-semibold">Prix (CHF)</label>
                             <input type="number" name="prix" id="editAnnoncePrix" class="form-control" step="0.01" min="0">
@@ -813,6 +842,11 @@ $pendingComments = $db->query('
                             <label class="form-label small fw-semibold">Email contact *</label>
                             <input type="email" name="contact_email" id="editAnnonceContact" class="form-control" required>
                         </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label small fw-semibold">Nouvelle image <span class="fw-normal text-muted">(laisser vide pour conserver l'actuelle)</span></label>
+                        <div id="editAnnonceImagePreview" class="mb-2"></div>
+                        <input type="file" name="image" class="form-control" accept="image/*">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -826,12 +860,20 @@ $pendingComments = $db->query('
 
 <script>
 // Pré-remplissage des modals d'édition
+function setImagePreview(containerId, src, baseUrl) {
+    const el = document.getElementById(containerId);
+    el.innerHTML = src
+        ? `<img src="${baseUrl}${src}" class="img-thumbnail" style="max-height:80px">`
+        : '<span class="text-muted small">Aucune image actuelle</span>';
+}
+
 document.querySelectorAll('[data-bs-target="#modalEditNews"]').forEach(btn => {
     btn.addEventListener('click', () => {
         document.getElementById('editNewsId').value      = btn.dataset.id;
         document.getElementById('editNewsTitre').value   = btn.dataset.titre;
         document.getElementById('editNewsContenu').value = btn.dataset.contenu;
         document.getElementById('editNewsAuteur').value  = btn.dataset.auteur;
+        setImagePreview('editNewsImagePreview', btn.dataset.image, '<?= BASE_URL ?>');
     });
 });
 document.querySelectorAll('[data-bs-target="#modalEditConcours"]').forEach(btn => {
@@ -850,6 +892,7 @@ document.querySelectorAll('[data-bs-target="#modalEditAnnonce"]').forEach(btn =>
         document.getElementById('editAnnonceDescription').value = btn.dataset.description;
         document.getElementById('editAnnoncePrix').value        = btn.dataset.prix;
         document.getElementById('editAnnonceContact').value     = btn.dataset.contact;
+        setImagePreview('editAnnonceImagePreview', btn.dataset.image, '<?= BASE_URL ?>');
     });
 });
 </script>

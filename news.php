@@ -32,7 +32,7 @@ if ($id > 0) {
     <div class="col-lg-8">
         <article class="card shadow-sm">
             <?php if ($article['image']): ?>
-                <img src="<?= htmlspecialchars($article['image']) ?>" class="card-img-top" alt="" style="max-height:350px; object-fit:cover">
+                <img src="<?= BASE_URL . htmlspecialchars($article['image']) ?>" class="card-img-top" alt="" style="max-height:350px; object-fit:cover">
             <?php endif; ?>
             <div class="card-body p-4">
                 <h1 class="h2 fw-bold mb-2"><?= htmlspecialchars($article['titre']) ?></h1>
@@ -86,7 +86,7 @@ require_once __DIR__ . '/includes/header.php';
             <div class="col-md-6 col-lg-4">
                 <article class="card h-100 shadow-sm">
                     <?php if ($article['image']): ?>
-                        <img src="<?= htmlspecialchars($article['image']) ?>" class="card-img-top" alt="" style="height:180px; object-fit:cover">
+                        <img src="<?= BASE_URL . htmlspecialchars($article['image']) ?>" class="card-img-top" alt="" style="height:180px; object-fit:cover">
                     <?php endif; ?>
                     <div class="card-body d-flex flex-column">
                         <h2 class="h5 card-title fw-semibold"><?= htmlspecialchars($article['titre']) ?></h2>

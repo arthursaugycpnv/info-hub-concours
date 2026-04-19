@@ -81,7 +81,7 @@ require_once __DIR__ . '/includes/header.php';
     <div class="col-lg-7">
         <div class="card shadow-sm">
             <?php if ($annonce['image']): ?>
-                <img src="<?= htmlspecialchars($annonce['image']) ?>"
+                <img src="<?= BASE_URL . htmlspecialchars($annonce['image']) ?>"
                      class="card-img-top"
                      alt="<?= htmlspecialchars($annonce['titre']) ?>"
                      style="max-height:400px; object-fit:cover">
