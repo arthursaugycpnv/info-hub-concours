@@ -23,7 +23,7 @@ require_once __DIR__ . '/includes/header.php';
 <div class="ih-hero mb-5">
     <div class="row align-items-center g-4">
         <div class="col-lg-7">
-            <span class="badge-hero"><i class="bi bi-cpu me-1"></i>Assoce Info — Section informatique CPNV</span>
+            <span class="badge-hero"><i class="bi bi-geo-alt me-1"></i>Section informatique — Sainte-Croix, VD</span>
             <h1>Bienvenue sur<br><span style="color:var(--ih-yellow)">InfoHub</span></h1>
             <p class="lead mt-3 mb-4">
                 Retrouvez le concours du mois, les dernières news de l'école

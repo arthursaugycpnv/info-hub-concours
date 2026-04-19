@@ -12,9 +12,9 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
-        <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="<?= BASE_URL ?>/index.php">
-            <i class="bi bi-cpu fs-5"></i>
-            <span>InfoHub <span class="fw-normal opacity-75">CPNV</span></span>
+        <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/index.php">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="42"
+                 style="border-radius:.4rem">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>
