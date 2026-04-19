@@ -76,8 +76,8 @@ require_once __DIR__ . '/includes/header.php';
     </ol>
 </nav>
 
-<h1 class="h2 fw-bold border-bottom pb-2 mb-4">
-    <i class="bi bi-newspaper me-2"></i>News
+<h1 class="ih-section-title">
+    <span class="ih-icon ih-icon-blue"><i class="bi bi-newspaper"></i></span>News
 </h1>
 
 <?php if ($news): ?>
