@@ -49,7 +49,7 @@ function isAdmin(): bool {
 define('DB_HOST', '127.0.0.1');
 define('DB_NAME', 'infohub');
 define('DB_USER', 'root');       // À adapter selon ton environnement
-define('DB_PASS', '');           // À adapter selon ton environnement
+define('DB_PASS', 'laragon');     // À adapter selon ton environnement
 define('DB_CHARSET', 'utf8mb4');
 
 function getDB(): PDO {
