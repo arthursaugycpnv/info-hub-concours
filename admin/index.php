@@ -201,19 +201,22 @@ $pendingComments = $db->query('
     <title>Admin — InfoHub CPNV</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="<?= BASE_URL ?>/assets/css/style.css" rel="stylesheet">
 </head>
 <body class="bg-light d-flex flex-column min-vh-100">
 
-<nav class="navbar navbar-dark bg-dark px-3">
-    <a class="navbar-brand fw-bold" href="<?= BASE_URL ?>/admin/index.php">
-        <i class="bi bi-cpu me-2"></i>InfoHub — Admin
+<nav class="navbar navbar-dark px-3">
+    <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/admin/index.php">
+        <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="42"
+             style="border-radius:.4rem; box-shadow:0 0 0 2px rgba(255,255,255,.15)">
+        <span class="small opacity-75 fw-semibold">Admin</span>
     </a>
     <div class="d-flex align-items-center gap-2">
         <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-light btn-sm" target="_blank">
             <i class="bi bi-globe me-1"></i>Voir le site
         </a>
         <span class="text-secondary small d-none d-md-inline"><?= htmlspecialchars($_SESSION['user_nom']) ?></span>
-        <a href="<?= BASE_URL ?>/admin/logout.php" class="btn btn-outline-secondary btn-sm">
+        <a href="<?= BASE_URL ?>/logout.php" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-box-arrow-right me-1"></i>Déconnexion
         </a>
     </div>
