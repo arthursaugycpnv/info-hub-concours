@@ -41,28 +41,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <link href="<?= BASE_URL ?>/assets/css/style.css" rel="stylesheet">
 </head>
-<body class="d-flex align-items-center justify-content-center" style="min-height:100vh;background:var(--ih-dark)">
-    <div class="card shadow" style="width:380px">
-        <div class="card-body p-4">
-            <div class="text-center mb-4">
-                <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="80"
-                     style="border-radius:.5rem">
-                <p class="text-muted small mt-2 mb-0">Administration</p>
-            </div>
+<body style="background:#000;min-height:100vh;display:flex;align-items:center;justify-content:center">
 
+<div style="width:100%;max-width:380px;padding:1rem">
+    <div style="text-align:center;margin-bottom:2rem">
+        <div style="display:inline-flex;align-items:center;gap:.6rem;background:var(--nb-yellow);border:var(--nb-border);padding:.5rem 1.25rem;box-shadow:var(--nb-shadow)">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="44" style="border:2px solid #000">
+            <div>
+                <div style="font-weight:900;font-size:1.1rem;text-transform:uppercase;color:#000;line-height:1">ASSO<span style="color:var(--nb-pink)">.INFO</span></div>
+                <div style="font-family:'Courier New',monospace;font-size:.6rem;color:#333;margin-top:2px">Administration</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-header" style="background:var(--nb-pink) !important;color:#fff;font-size:.9rem">
+            <i class="bi bi-shield-lock me-1"></i>Accès administrateur
+        </div>
+        <div class="card-body p-4">
             <?php if ($error): ?>
-                <div class="alert alert-danger py-2 small"><?= htmlspecialchars($error) ?></div>
+                <div class="alert alert-danger py-2 mb-3" style="font-size:.85rem"><?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
             <form method="POST" novalidate>
                 <?= csrf_field() ?>
                 <div class="mb-3">
-                    <label class="form-label small fw-semibold">Email</label>
+                    <label class="form-label">Email</label>
                     <input type="email" name="email" class="form-control"
                            value="<?= htmlspecialchars($_POST['email'] ?? '') ?>" required autofocus>
                 </div>
                 <div class="mb-4">
-                    <label class="form-label small fw-semibold">Mot de passe</label>
+                    <label class="form-label">Mot de passe</label>
                     <input type="password" name="mot_de_passe" class="form-control" required>
                 </div>
                 <button type="submit" class="btn btn-dark w-100">
@@ -70,9 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
             <div class="text-center mt-3">
-                <a href="<?= BASE_URL ?>/index.php" class="text-muted small">← Retour au site</a>
+                <a href="<?= BASE_URL ?>/index.php" class="nb-mono" style="font-size:.75rem;color:#888">← Retour au site</a>
             </div>
         </div>
     </div>
+</div>
 </body>
 </html>

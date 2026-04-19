@@ -57,7 +57,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-// Admin voit tout, visiteurs voient seulement les approuvés
 $commentaires = isAdmin()
     ? $db->prepare('SELECT * FROM commentaires WHERE annonce_id = ? ORDER BY created_at ASC')
     : $db->prepare('SELECT * FROM commentaires WHERE annonce_id = ? AND approuve = 1 ORDER BY created_at ASC');
@@ -80,58 +79,55 @@ require_once __DIR__ . '/includes/header.php';
 
     <!-- Détail annonce -->
     <div class="col-lg-7">
-        <div class="card shadow-sm">
+        <div class="card">
             <?php if ($annonce['image']): ?>
                 <img src="<?= BASE_URL . htmlspecialchars($annonce['image']) ?>"
-                     class="card-img-top"
-                     alt="<?= htmlspecialchars($annonce['titre']) ?>"
-                     style="max-height:400px; object-fit:cover">
+                     class="card-img-top" alt="<?= htmlspecialchars($annonce['titre']) ?>"
+                     style="max-height:400px;object-fit:cover">
+            <?php else: ?>
+                <div style="height:8px;background:var(--nb-yellow);border-bottom:var(--nb-border)"></div>
             <?php endif; ?>
             <div class="card-body p-4">
                 <div class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3">
-                    <h1 class="h3 fw-bold mb-0"><?= htmlspecialchars($annonce['titre']) ?></h1>
+                    <h1 class="nb-upper" style="font-size:1.5rem;font-weight:900;margin-bottom:0">
+                        <?= htmlspecialchars($annonce['titre']) ?>
+                    </h1>
                     <?php if ($annonce['prix'] !== null): ?>
-                        <span class="badge bg-success fs-6 px-3 py-2">
+                        <div style="background:var(--nb-cyan);border:var(--nb-border);padding:.5rem 1rem;font-size:1.4rem;font-weight:900;box-shadow:var(--nb-shadow-sm)">
                             CHF <?= number_format($annonce['prix'], 2, '.', "'") ?>.-
-                        </span>
+                        </div>
                     <?php else: ?>
-                        <span class="badge bg-secondary fs-6 px-3 py-2">Prix à discuter</span>
+                        <span class="badge bg-secondary" style="font-size:.8rem;padding:.5rem .85rem">À discuter</span>
                     <?php endif; ?>
                 </div>
-
-                <p class="text-muted small mb-4">
-                    <i class="bi bi-calendar3 me-1"></i>
-                    Publié le <?= date('d.m.Y', strtotime($annonce['created_at'])) ?>
+                <p class="nb-mono mb-4" style="font-size:.75rem;color:#555">
+                    <i class="bi bi-calendar3 me-1"></i>Publié le <?= date('d.m.Y', strtotime($annonce['created_at'])) ?>
                 </p>
-
-                <div class="fs-6 lh-lg" style="white-space: pre-line">
-                    <?= htmlspecialchars($annonce['description']) ?>
-                </div>
+                <div style="line-height:1.8;white-space:pre-line"><?= htmlspecialchars($annonce['description']) ?></div>
             </div>
         </div>
-
-        <div class="mt-3 d-flex gap-2">
-            <a href="<?= BASE_URL ?>/annonces.php" class="btn btn-outline-secondary btn-sm">
+        <div class="mt-3 d-flex gap-2 flex-wrap">
+            <a href="<?= BASE_URL ?>/annonces.php" class="btn btn-outline-dark btn-sm">
                 <i class="bi bi-arrow-left me-1"></i>Toutes les annonces
             </a>
             <?php if (isAdmin()): ?>
-                <a href="<?= BASE_URL ?>/admin/index.php#tab-annonces" class="btn btn-warning btn-sm">
+                <a href="<?= BASE_URL ?>/admin/index.php?tab=annonces" class="btn btn-warning btn-sm">
                     <i class="bi bi-pencil me-1"></i>Gérer dans l'admin
                 </a>
             <?php endif; ?>
         </div>
     </div>
 
-    <!-- Sidebar : contact + commentaires -->
+    <!-- Sidebar -->
     <div class="col-lg-5">
 
-        <!-- Contact -->
-        <div class="card shadow-sm mb-4">
-            <div class="card-header fw-semibold">
+        <!-- Contact vendeur -->
+        <div class="card mb-4">
+            <div class="card-header" style="background:var(--nb-pink) !important;color:#fff">
                 <i class="bi bi-person-circle me-1"></i>Contacter le vendeur
             </div>
-            <div class="card-body">
-                <p class="mb-2 small text-muted">
+            <div class="card-body p-4">
+                <p class="nb-mono mb-3" style="font-size:.8rem;color:#555">
                     Réponse le vendredi suivant l'annonce.<br>
                     Paiement par Twint à l'association si affaire conclue.
                 </p>
@@ -144,22 +140,22 @@ require_once __DIR__ . '/includes/header.php';
         </div>
 
         <!-- Commentaires -->
-        <div class="card shadow-sm" id="commentaires">
-            <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+        <div class="card" id="commentaires">
+            <div class="card-header d-flex justify-content-between align-items-center" style="background:var(--nb-cyan) !important">
                 <span><i class="bi bi-chat-dots me-1"></i>Commentaires</span>
-                <span class="badge bg-secondary"><?= count($commentaires) ?></span>
+                <span class="badge bg-dark"><?= count($commentaires) ?></span>
             </div>
             <div class="card-body p-0">
                 <?php if ($commentaires): ?>
                     <ul class="list-group list-group-flush">
                         <?php foreach ($commentaires as $c): ?>
-                            <li class="list-group-item">
+                            <li class="list-group-item p-3">
                                 <div class="d-flex justify-content-between align-items-start mb-1">
                                     <div>
-                                        <strong class="small"><?= htmlspecialchars($c['auteur']) ?></strong>
-                                        <span class="text-muted small ms-2"><?= date('d.m.Y', strtotime($c['created_at'])) ?></span>
+                                        <strong class="nb-upper" style="font-size:.75rem"><?= htmlspecialchars($c['auteur']) ?></strong>
+                                        <span class="nb-mono ms-2" style="font-size:.7rem;color:#555"><?= date('d.m.Y', strtotime($c['created_at'])) ?></span>
                                         <?php if (!$c['approuve']): ?>
-                                            <span class="badge bg-warning text-dark ms-1 small">En attente</span>
+                                            <span class="badge bg-warning ms-1">En attente</span>
                                         <?php endif; ?>
                                     </div>
                                     <?php if (isAdmin()): ?>
@@ -188,17 +184,17 @@ require_once __DIR__ . '/includes/header.php';
                         <?php endforeach; ?>
                     </ul>
                 <?php else: ?>
-                    <p class="text-muted small p-3 mb-0">Aucun commentaire pour le moment.</p>
+                    <p class="nb-mono p-3 mb-0" style="font-size:.8rem;color:#555">Aucun commentaire pour le moment.</p>
                 <?php endif; ?>
             </div>
-            <div class="card-footer">
+            <div class="card-footer p-3">
                 <?php if (isset($_GET['pending'])): ?>
-                    <div class="alert alert-info py-2 small mb-3">
+                    <div class="alert alert-warning py-2 mb-3" style="font-size:.8rem">
                         <i class="bi bi-clock me-1"></i>Votre commentaire est en attente de modération.
                     </div>
                 <?php endif; ?>
                 <?php if ($erreurCommentaire): ?>
-                    <div class="alert alert-danger py-2 small mb-3"><?= htmlspecialchars($erreurCommentaire) ?></div>
+                    <div class="alert alert-danger py-2 mb-3" style="font-size:.8rem"><?= htmlspecialchars($erreurCommentaire) ?></div>
                 <?php endif; ?>
                 <form method="POST">
                     <?php if (!isLoggedIn()): ?>
@@ -207,14 +203,14 @@ require_once __DIR__ . '/includes/header.php';
                                    placeholder="Votre nom *" required
                                    value="<?= htmlspecialchars($_POST['auteur'] ?? '') ?>">
                         </div>
-                        <p class="text-muted small mb-2">
+                        <p class="nb-mono mb-2" style="font-size:.75rem;color:#555">
                             <i class="bi bi-info-circle me-1"></i>
-                            <a href="<?= BASE_URL ?>/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>">Connectez-vous</a>
-                            pour que votre commentaire soit publié immédiatement.
+                            <a href="<?= BASE_URL ?>/login.php?redirect=<?= urlencode($_SERVER['REQUEST_URI']) ?>" style="color:#000;font-weight:700">Connectez-vous</a>
+                            pour publier immédiatement.
                         </p>
                     <?php else: ?>
-                        <p class="small text-muted mb-2">
-                            <i class="bi bi-person-check me-1"></i>Commentaire en tant que <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong>
+                        <p class="nb-mono mb-2" style="font-size:.75rem;color:#555">
+                            <i class="bi bi-person-check me-1"></i>En tant que <strong><?= htmlspecialchars($_SESSION['user_nom']) ?></strong>
                         </p>
                     <?php endif; ?>
                     <div class="mb-2">
