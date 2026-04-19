@@ -75,7 +75,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="bi bi-box-arrow-in-right me-1"></i>Se connecter
                 </button>
             </form>
-            <div class="text-center mt-3">
+            <hr class="my-3">
+            <div class="text-center small">
+                Pas encore de compte ? <a href="<?= BASE_URL ?>/register.php">S'inscrire</a>
+            </div>
+            <div class="text-center mt-2">
                 <a href="<?= BASE_URL ?>/index.php" class="text-muted small">← Retour au site</a>
             </div>
         </div>

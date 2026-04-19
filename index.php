@@ -11,6 +11,14 @@ $annonces = $db->query('SELECT * FROM annonces WHERE actif = 1 ORDER BY created_
 require_once __DIR__ . '/includes/header.php';
 ?>
 
+<?php if (isset($_GET['registered'])): ?>
+    <div class="alert alert-success alert-dismissible fade show py-2 mb-4">
+        <i class="bi bi-check-circle me-1"></i>
+        Bienvenue ! Votre compte a été créé. Vous pouvez maintenant commenter les annonces et poster des publicités.
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
+
 <?php if ($concours): ?>
 <!-- CONCOURS DU MOIS -->
 <section id="concours" class="mb-5">
