@@ -93,7 +93,7 @@ require_once __DIR__ . '/includes/header.php';
                 <a href="<?= BASE_URL ?>/annonce.php?id=<?= $annonce['id'] ?>" class="text-decoration-none text-reset">
                     <div class="card h-100 shadow-sm card-hover">
                         <?php if ($annonce['image']): ?>
-                            <img src="<?= htmlspecialchars($annonce['image']) ?>" class="card-img-top" alt="" style="height:200px; object-fit:cover">
+                            <img src="<?= BASE_URL . htmlspecialchars($annonce['image']) ?>" class="card-img-top" alt="" style="height:200px; object-fit:cover">
                         <?php else: ?>
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height:120px">
                                 <i class="bi bi-tag text-secondary fs-1"></i>
