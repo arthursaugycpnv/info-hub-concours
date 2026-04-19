@@ -4,9 +4,8 @@
     <div class="container">
         <div class="row g-4 mb-3">
             <div class="col-md-4">
-                <div class="footer-brand mb-2">
-                    <i class="bi bi-cpu me-2"></i>InfoHub CPNV
-                </div>
+                <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info"
+                     height="80" style="border-radius:.5rem" class="mb-3">
                 <p class="small mb-0 opacity-75">
                     Site de l'association Assoce Info —<br>
                     Centre pédagogique du Nord vaudois<br>

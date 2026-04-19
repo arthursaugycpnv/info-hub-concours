@@ -13,8 +13,8 @@
 <nav class="navbar navbar-expand-lg navbar-dark">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="<?= BASE_URL ?>/index.php">
-            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="42"
-                 style="border-radius:.4rem">
+            <img src="<?= BASE_URL ?>/assets/img/logo.png" alt="L'Assoce Info" height="46"
+                 style="border-radius:.5rem; box-shadow:0 0 0 2px rgba(255,255,255,.15)">
         </a>
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>
