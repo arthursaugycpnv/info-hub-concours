@@ -149,6 +149,13 @@ $annonces = $db->query('
     GROUP BY a.id
     ORDER BY a.created_at DESC
 ')->fetchAll();
+$inscriptions = $db->query('
+    SELECT i.*, co.titre AS concours_titre
+    FROM inscriptions i
+    JOIN concours co ON co.id = i.concours_id
+    ORDER BY i.created_at DESC
+')->fetchAll();
+
 $pendingComments = $db->query('
     SELECT c.*, a.titre AS annonce_titre
     FROM commentaires c
@@ -219,6 +226,12 @@ $pendingComments = $db->query('
             <a class="nav-link <?= $activeTab === 'annonces' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-annonces">
                 <i class="bi bi-tag me-1"></i>Annonces
                 <span class="badge bg-secondary ms-1"><?= count($annonces) ?></span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link <?= $activeTab === 'inscriptions' ? 'active' : '' ?>" data-bs-toggle="tab" href="#tab-inscriptions">
+                <i class="bi bi-people me-1"></i>Inscriptions
+                <span class="badge bg-secondary ms-1"><?= count($inscriptions) ?></span>
             </a>
         </li>
         <li class="nav-item">
@@ -474,6 +487,82 @@ $pendingComments = $db->query('
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ── INSCRIPTIONS ── -->
+        <div class="tab-pane fade <?= $activeTab === 'inscriptions' ? 'show active' : '' ?>" id="tab-inscriptions">
+            <div class="card shadow-sm">
+                <div class="card-header fw-semibold d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-people me-1"></i>Inscriptions aux concours</span>
+                    <span class="badge bg-secondary"><?= count($inscriptions) ?></span>
+                </div>
+                <div class="card-body p-0">
+                    <?php if ($inscriptions): ?>
+                        <?php
+                            // Grouper par concours
+                            $grouped = [];
+                            foreach ($inscriptions as $i) {
+                                $grouped[$i['concours_titre']][] = $i;
+                            }
+                        ?>
+                        <?php foreach ($grouped as $titreConcours => $liste): ?>
+                            <div class="px-3 pt-3 pb-1">
+                                <h6 class="fw-semibold text-muted small text-uppercase mb-2">
+                                    <i class="bi bi-trophy me-1"></i><?= htmlspecialchars($titreConcours) ?>
+                                    <span class="badge bg-secondary ms-1"><?= count($liste) ?></span>
+                                </h6>
+                            </div>
+                            <table class="table table-hover mb-0 align-middle small">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Nom</th>
+                                        <th>Email</th>
+                                        <th>Type</th>
+                                        <th>Membres</th>
+                                        <th>Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <?php foreach ($liste as $idx => $insc): ?>
+                                    <tr>
+                                        <td class="text-muted"><?= $idx + 1 ?></td>
+                                        <td class="fw-semibold"><?= htmlspecialchars($insc['nom']) ?></td>
+                                        <td>
+                                            <a href="mailto:<?= htmlspecialchars($insc['email']) ?>" class="text-decoration-none">
+                                                <?= htmlspecialchars($insc['email']) ?>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <?php if ($insc['type'] === 'groupe'): ?>
+                                                <span class="badge bg-info text-dark">Groupe</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-light text-dark border">Individuel</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-muted">
+                                            <?php if ($insc['membres']): ?>
+                                                <span title="<?= htmlspecialchars($insc['membres']) ?>">
+                                                    <?= htmlspecialchars(mb_strimwidth($insc['membres'], 0, 60, '…')) ?>
+                                                </span>
+                                            <?php else: ?>
+                                                <span class="text-muted">—</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="text-nowrap text-muted"><?= date('d.m.Y H:i', strtotime($insc['created_at'])) ?></td>
+                                    </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <p class="text-muted text-center py-4 mb-0">
+                            <i class="bi bi-inbox fs-4 d-block mb-2"></i>
+                            Aucune inscription pour l'instant.
+                        </p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
