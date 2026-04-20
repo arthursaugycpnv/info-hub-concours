@@ -213,7 +213,7 @@ $pendingComments = $db->query('
         <span class="small opacity-75 fw-semibold">Admin</span>
     </a>
     <div class="d-flex align-items-center gap-2">
-        <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-light btn-sm" target="_blank">
+        <a href="<?= BASE_URL ?>/index.php" class="btn btn-outline-primary btn-sm" target="_blank">
             <i class="bi bi-globe me-1"></i>Voir le site
         </a>
         <span class="text-secondary small d-none d-md-inline"><?= htmlspecialchars($_SESSION['user_nom']) ?></span>
