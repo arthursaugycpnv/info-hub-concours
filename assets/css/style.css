@@ -1,0 +1,226 @@
+/* ── Variables — 60/30/10 palette ───────────────────────────────── */
+:root {
+    /* 60 % — warm cream (backgrounds, surfaces) */
+    --ed-cream:     #F8F6F2;
+    --ed-cream-2:   #EEEAE3;
+    /* 30 % — deep navy (navbar, footer, headings) */
+    --ed-navy:      #1B2B3A;
+    --ed-navy-2:    #253646;
+    /* 10 % — warm amber (CTAs, accents, active states) */
+    --ed-amber:     #D97706;
+    --ed-amber-dim: #B45309;
+    /* Neutrals */
+    --ed-border:    #DDD9D2;
+    --ed-text:      #1B2B3A;
+    --ed-muted:     #6B6560;
+    --ed-radius:    8px;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: var(--ed-cream);
+    color: var(--ed-text);
+    line-height: 1.6;
+}
+
+/* ── Navbar (30 % — navy) ───────────────────────────────────────── */
+.navbar {
+    background: var(--ed-navy) !important;
+    padding-top: .875rem;
+    padding-bottom: .875rem;
+}
+.navbar-brand {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: -.3px;
+    color: #fff !important;
+}
+.navbar .nav-link {
+    color: rgba(255,255,255,.65) !important;
+    font-size: .875rem;
+    font-weight: 500;
+    padding: .4rem .75rem !important;
+    border-radius: var(--ed-radius);
+    transition: color .15s, background .15s;
+}
+.navbar .nav-link:hover,
+.navbar .nav-link.active {
+    color: #fff !important;
+    background: rgba(255,255,255,.08);
+}
+
+/* ── Admin bar (10 % accent) ────────────────────────────────────── */
+.admin-bar {
+    background: var(--ed-amber);
+    color: #fff;
+    font-size: .8rem;
+    font-weight: 600;
+}
+.admin-bar a { color: #fff; text-decoration: none; }
+.admin-bar .btn-dark {
+    background: rgba(0,0,0,.2);
+    border-color: transparent;
+    color: #fff;
+}
+
+/* ── Hero (30 % — navy bg) ──────────────────────────────────────── */
+.ih-hero {
+    background: var(--ed-navy);
+    color: #fff;
+    border-radius: var(--ed-radius);
+    padding: 3.5rem 3rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+}
+.ih-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at 75% 50%, rgba(217,119,6,.18) 0%, transparent 55%);
+    pointer-events: none;
+}
+.ih-hero h1 {
+    font-size: clamp(1.75rem, 4vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -.04em;
+    line-height: 1.15;
+}
+.ih-hero .lead {
+    color: rgba(255,255,255,.68);
+    font-size: 1rem;
+    line-height: 1.65;
+}
+.ih-hero .badge-hero {
+    background: rgba(217,119,6,.2);
+    color: #FCD34D;
+    border: 1px solid rgba(217,119,6,.4);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    padding: .3em .75em;
+    border-radius: 2rem;
+    display: inline-block;
+    margin-bottom: .75rem;
+}
+
+/* ── Section titles ─────────────────────────────────────────────── */
+.ih-section-title {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: 1.25rem;
+    font-weight: 800;
+    letter-spacing: -.03em;
+    padding-left: .75rem;
+    border-left: 3px solid var(--ed-amber);
+    margin-bottom: 1.5rem;
+    color: var(--ed-text);
+}
+.ih-section-title .ih-icon {
+    width: auto;
+    height: auto;
+    background: none;
+    color: var(--ed-amber);
+    font-size: 1rem;
+    flex-shrink: 0;
+}
+
+/* ── Cards ──────────────────────────────────────────────────────── */
+.card {
+    border: 1px solid var(--ed-border);
+    border-radius: var(--ed-radius);
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(27,43,58,.05);
+    transition: box-shadow .2s, transform .2s;
+}
+.card:hover { box-shadow: 0 6px 20px rgba(27,43,58,.1) !important; }
+
+.card-hover { cursor: pointer; }
+.card-hover:hover { transform: translateY(-3px); }
+
+.card-header {
+    background: var(--ed-cream);
+    border-bottom: 1px solid var(--ed-border);
+    font-weight: 600;
+    font-size: .875rem;
+}
+.card-footer {
+    background: var(--ed-cream);
+    border-top: 1px solid var(--ed-border);
+}
+
+/* ── Concours card ──────────────────────────────────────────────── */
+.concours-card { border-left: 4px solid var(--ed-amber) !important; }
+
+/* ── Bootstrap amber overrides (10 % accent) ────────────────────── */
+.badge { font-weight: 600; letter-spacing: .02em; }
+.badge.bg-warning { background-color: var(--ed-amber) !important; color: #fff !important; }
+.text-warning      { color: var(--ed-amber) !important; }
+.border-warning    { border-color: var(--ed-amber) !important; }
+
+/* ── Buttons ────────────────────────────────────────────────────── */
+.btn { border-radius: var(--ed-radius); font-weight: 500; }
+
+.btn-warning {
+    background: var(--ed-amber);
+    border-color: var(--ed-amber);
+    color: #fff;
+}
+.btn-warning:hover,
+.btn-warning:focus,
+.btn-warning:active,
+.btn-warning:first-child:active {
+    background: var(--ed-amber-dim) !important;
+    border-color: var(--ed-amber-dim) !important;
+    color: #fff !important;
+}
+.btn-outline-warning {
+    border-color: var(--ed-amber);
+    color: var(--ed-amber);
+    background: transparent;
+}
+.btn-outline-warning:hover {
+    background: var(--ed-amber);
+    border-color: var(--ed-amber);
+    color: #fff;
+}
+
+/* ── Footer (30 % — navy) ───────────────────────────────────────── */
+.ih-footer {
+    background: var(--ed-navy);
+    color: rgba(255,255,255,.5);
+    border-top: none;
+    padding: 3rem 0 1.5rem;
+    margin-top: auto;
+    font-size: .875rem;
+}
+.ih-footer a { color: rgba(255,255,255,.5); text-decoration: none; transition: color .15s; }
+.ih-footer a:hover { color: var(--ed-amber); }
+.ih-footer .footer-brand { font-size: 1.05rem; font-weight: 800; color: #fff; letter-spacing: -.03em; }
+.ih-footer hr { border-color: rgba(255,255,255,.1); }
+
+/* ── Breadcrumb ─────────────────────────────────────────────────── */
+.breadcrumb { font-size: .85rem; }
+.breadcrumb-item a { color: var(--ed-amber); text-decoration: none; }
+.breadcrumb-item a:hover { color: var(--ed-amber-dim); }
+
+/* ── Countdown ──────────────────────────────────────────────────── */
+.countdown-box {
+    background: var(--ed-navy);
+    color: #fff;
+    border-radius: var(--ed-radius);
+    padding: .5rem .9rem;
+    font-weight: 700;
+    font-size: 1.1rem;
+    font-variant-numeric: tabular-nums;
+    display: inline-block;
+}
+.countdown-box small { display: block; font-size: .6rem; font-weight: 400; color: rgba(255,255,255,.5); text-align: center; }
+
+/* ── Scrollbar ──────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--ed-cream); }
+::-webkit-scrollbar-thumb { background: var(--ed-cream-2); border-radius: 3px; }
